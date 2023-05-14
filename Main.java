@@ -119,21 +119,20 @@ public class Main {
 
                 case 7: {
 
-                    // COMPACTAÇÃO
+                    // COMPACTAÇÃO DO ARQUIVO
 
                 }
                     break;
 
                 case 8:
 
-                    // DESCOMPACTAÇÃO
+                    // DESCOMPACTAÇÃO DO ARQUIVO
 
                     break;
 
                 default:
 
                     System.out.println("Opcao invalida!!");
-
             }
 
         } while (x != 0);
