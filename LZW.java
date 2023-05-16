@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class LZW {
     private Map<String, Integer> dictionary;
@@ -14,6 +15,8 @@ public class LZW {
         // Inicializar o dicionário com os caracteres ASCII
         for (int i = 0; i < 256; i++) {
             dictionary.put(Character.toString((char) i), i);
+            dictionary.put("\u00E9", i);
+
         }
     }
 
@@ -46,38 +49,46 @@ public class LZW {
             reverseDictionary.put(dictionary.get(key), key);
         }
 
-        int previousCode = compressedData.get(0);
-        String previousString = reverseDictionary.get(previousCode);
-        decompressed.append(previousString);
+      
+            int previousCode = compressedData.get(0);
+            String previousString = reverseDictionary.get(previousCode);
+            decompressed.append(previousString);
 
-        for (int i = 1; i < compressedData.size(); i++) {
-            int currentCode = compressedData.get(i);
-            String currentString;
+            for (int i = 1; i < compressedData.size(); i++) {
+                int currentCode = compressedData.get(i);
+                String currentString;
 
-            if (reverseDictionary.containsKey(currentCode)) {
-                currentString = reverseDictionary.get(currentCode);
-            } else {
-                currentString = previousString + previousString.charAt(0);
+                if (reverseDictionary.containsKey(currentCode)) {
+                    currentString = reverseDictionary.get(currentCode);
+                } else {
+                    currentString = previousString + previousString.charAt(0);
+                }
+
+                decompressed.append(currentString);
+
+                reverseDictionary.put(dictionary.size(), previousString + currentString.charAt(0));
+                dictionary.put(previousString + currentString.charAt(0), dictionary.size());
+
+                previousString = currentString;
             }
 
-            decompressed.append(currentString);
-
-            reverseDictionary.put(dictionary.size(), previousString + currentString.charAt(0));
-            dictionary.put(previousString + currentString.charAt(0), dictionary.size());
-
-            previousString = currentString;
-        }
-
+        
         return decompressed.toString();
     }
 
     public static void main(String[] args) {
         LZW lzw = new LZW();
 
-        String input = "TOBEORNOTTOBEORTOBEORNOT";
+        Scanner leitor = new Scanner(System.in);
+
+        System.out.println("Informe a palavra a ser compactada");
+
+        String input = leitor.nextLine();
         List<Integer> compressed = lzw.compress(input);
 
         System.out.println("Compressed Data: " + compressed);
         System.out.println("Decompressed Data: " + lzw.decompress(compressed));
+
+        leitor.close();
     }
 }
