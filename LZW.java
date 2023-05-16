@@ -17,12 +17,17 @@ public class LZW {
         dictionary = new HashMap<>();
         compressedData = new ArrayList<>();
 
+
+       
+
         // Inicializar o dicionário com os valores iniciais
         char[] iniciarDicionario = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
                 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                 'V', 'W', 'X', 'Y', 'Z', ' ', '(', ')', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '/',
-                '|', ';', '"', '.' , '!', ':', '\n'};
+                '|', ';', '"', '.', '!', ':', '\n', '\'', 'Ö', 'ö', '&', 'é', 'É', '?'};
+
+
 
         // Inicializar o dicionário com os caracteres ASCII
         for (int i = 0; i < iniciarDicionario.length; i++) {
