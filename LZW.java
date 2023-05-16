@@ -5,17 +5,23 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class LZW {
-    private Map<String, Integer> dictionary;
+    Map<String, Integer> dictionary = new HashMap<>();
+
     private List<Integer> compressedData;
 
     public LZW() {
         dictionary = new HashMap<>();
         compressedData = new ArrayList<>();
 
+        // Inicializar o dicionário com os valores iniciais
+        char[] iniciarDicionario = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+                'V', 'W', 'X', 'Y', 'Z', ' '};
+
         // Inicializar o dicionário com os caracteres ASCII
-        for (int i = 0; i < 256; i++) {
-            dictionary.put(Character.toString((char) i), i);
-            dictionary.put("\u00E9", i);
+        for (int i = 0; i < iniciarDicionario.length; i++) {
+            dictionary.put(Character.toString(iniciarDicionario[i]), i);
 
         }
     }
@@ -49,30 +55,28 @@ public class LZW {
             reverseDictionary.put(dictionary.get(key), key);
         }
 
-      
-            int previousCode = compressedData.get(0);
-            String previousString = reverseDictionary.get(previousCode);
-            decompressed.append(previousString);
+        int previousCode = compressedData.get(0);
+        String previousString = reverseDictionary.get(previousCode);
+        decompressed.append(previousString);
 
-            for (int i = 1; i < compressedData.size(); i++) {
-                int currentCode = compressedData.get(i);
-                String currentString;
+        for (int i = 1; i < compressedData.size(); i++) {
+            int currentCode = compressedData.get(i);
+            String currentString;
 
-                if (reverseDictionary.containsKey(currentCode)) {
-                    currentString = reverseDictionary.get(currentCode);
-                } else {
-                    currentString = previousString + previousString.charAt(0);
-                }
-
-                decompressed.append(currentString);
-
-                reverseDictionary.put(dictionary.size(), previousString + currentString.charAt(0));
-                dictionary.put(previousString + currentString.charAt(0), dictionary.size());
-
-                previousString = currentString;
+            if (reverseDictionary.containsKey(currentCode)) {
+                currentString = reverseDictionary.get(currentCode);
+            } else {
+                currentString = previousString + previousString.charAt(0);
             }
 
-        
+            decompressed.append(currentString);
+
+            reverseDictionary.put(dictionary.size(), previousString + currentString.charAt(0));
+            dictionary.put(previousString + currentString.charAt(0), dictionary.size());
+
+            previousString = currentString;
+        }
+
         return decompressed.toString();
     }
 
