@@ -1,3 +1,8 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -51,6 +56,30 @@ public class Filme {
                 "\nScore: " + this.score +
                 "\nParticipantes: ";
     }
+
+    public void fromByteArray(byte[] b) throws IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(b);
+        DataInputStream dis = new DataInputStream(bais);
+        this.id = dis.readInt();
+        this.titulo = dis.readUTF();
+        this.genero = dis.readUTF();
+        this.data.setTimeInMillis(dis.readLong());
+        this.score = dis.readDouble();
+        this.duracao = dis.readDouble();
+    }// fim do metodo fromByteArray
+
+    public byte[] toByteArray() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+        dos.writeInt(id);
+        dos.writeUTF(titulo);
+        dos.writeLong(data.getTimeInMillis());
+        dos.writeDouble(score);
+        dos.writeUTF(cast.imprimirNomes());
+        dos.writeDouble(duracao);
+
+        return baos.toByteArray();
+    }// fim do metodo toByteArray
 
     public int getId() {
         return id;
@@ -131,7 +160,5 @@ public class Filme {
     public void setDescomprimido(String descomprimido) {
         this.descomprimido = descomprimido;
     }
-
-    
 
 }

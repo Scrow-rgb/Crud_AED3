@@ -13,7 +13,8 @@ import java.util.Scanner;
 
 public class CRUD {
 
-    public static String caminho = "C:/Users/Wander/Documents/Caio/TP1/TP1/TP1Completo/";
+    //Sempre mudar a variável caminho de acordo com o seu caminho
+    public  String caminho = "C:/Users/Wander/Documents/Caio/TP1/TP1/Crud_AED3/";
     public static Scanner leitor = new Scanner(System.in);
 
     public void cargaDeDados() throws IOException {
