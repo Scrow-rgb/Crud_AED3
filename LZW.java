@@ -22,7 +22,7 @@ public class LZW {
                 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                 'V', 'W', 'X', 'Y', 'Z', ' ', '(', ')', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '/',
-                '|', ';', '"', '.' , '!', ':'};
+                '|', ';', '"', '.' , '!', ':', '\n'};
 
         // Inicializar o dicionário com os caracteres ASCII
         for (int i = 0; i < iniciarDicionario.length; i++) {
@@ -90,12 +90,23 @@ public class LZW {
 
         Scanner leitor = new Scanner(System.in);
         String arquivoCompactado = "compact.db";
-        String descompactado = "decompress.db";
+        String arquivoDescompactado = "decompress.db";
 
-        System.out.println("Informe a palavra a ser compactada");
-        String input = leitor.nextLine();
+        System.out.println("Informe as frases a serem compactadas (digite 'fim' para encerrar):");
 
-        List<Integer> compressed = lzw.compress(input);
+        List<String> frases = new ArrayList<>();
+        String input;
+        while (!(input = leitor.nextLine()).equalsIgnoreCase("fim")) {
+            frases.add(input);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String frase : frases) {
+            sb.append(frase).append("\n");
+        }
+        String textoCompactar = sb.toString().trim();
+
+        List<Integer> compressed = lzw.compress(textoCompactar);
 
         OutputStream saida = new FileOutputStream(arquivoCompactado);
         DataOutputStream dataOutputStream = new DataOutputStream(saida);
@@ -104,17 +115,17 @@ public class LZW {
         }
         dataOutputStream.close();
 
-        OutputStream out = new FileOutputStream(descompactado);
-        String decompressed = lzw.decompress(compressed);
-        byte[] bytes = decompressed.getBytes();
+        OutputStream out = new FileOutputStream(arquivoDescompactado);
+        String textoDescompactado = lzw.decompress(compressed);
+        byte[] bytes = textoDescompactado.getBytes();
         out.write(bytes);
         out.close();
 
         System.out.println();
-        System.out.println("Compressed Data: " + compressed);
+        System.out.println("Frases Compactadas: " + compressed);
 
         System.out.println();
-        System.out.println("Decompressed Data: " + decompressed);
+        System.out.println("Texto Descompactado: " + textoDescompactado);
 
         leitor.close();
     }
