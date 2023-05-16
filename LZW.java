@@ -133,5 +133,5 @@ public class LZW {
         System.out.println("Texto Descompactado: " + textoDescompactado);
 
         leitor.close();
-    }
+    }   
 }
