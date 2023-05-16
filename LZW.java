@@ -1,3 +1,4 @@
+import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -88,40 +89,33 @@ public class LZW {
         LZW lzw = new LZW();
 
         Scanner leitor = new Scanner(System.in);
-        String arquivoCompactado=  "arquivo.db";
+        String arquivoCompactado = "compact.db";
         String descompactado = "decompress.db";
 
         System.out.println("Informe a palavra a ser compactada");
-
         String input = leitor.nextLine();
-        
 
         List<Integer> compressed = lzw.compress(input);
 
         OutputStream saida = new FileOutputStream(arquivoCompactado);
-        byte[] bytes = input.getBytes();
-
-        saida.write(bytes);
-
+        DataOutputStream dataOutputStream = new DataOutputStream(saida);
+        for (int i : compressed) {
+            dataOutputStream.writeByte(i);
+        }
+        dataOutputStream.close();
 
         OutputStream out = new FileOutputStream(descompactado);
-        byte[] bytes2 = input.getBytes();
-
-        out.write(bytes2);
-        
-
+        String decompressed = lzw.decompress(compressed);
+        byte[] bytes = decompressed.getBytes();
+        out.write(bytes);
+        out.close();
 
         System.out.println();
-
         System.out.println("Compressed Data: " + compressed);
 
         System.out.println();
-        System.out.println("Decompressed Data: " + lzw.decompress(compressed));
+        System.out.println("Decompressed Data: " + decompressed);
 
-        
-
-        saida.close();
-        out.close();
         leitor.close();
     }
 }
