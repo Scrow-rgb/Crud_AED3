@@ -1,6 +1,8 @@
 import java.util.Calendar;
 import java.util.Scanner;
 
+
+
 public class Main {
     public static void main(String[] args) throws Exception {
         int x = -1;
@@ -8,6 +10,7 @@ public class Main {
         System.out.println("");
         Scanner leitor = new Scanner(System.in);
         CRUD crud = new CRUD();
+        boolean sinal = false;
 
         do {
 
@@ -119,14 +122,36 @@ public class Main {
 
                 case 7: {
 
-                    // COMPACTAÇÃO DO ARQUIVO
+                    if (sinal == false) {
+                        crud.compactar();
+                        sinal = true;
+                    } else
+                        System.out.println("Arquivo ja compactado!");
 
                 }
                     break;
 
-                case 8:
+                case 8: {
 
-                    // DESCOMPACTAÇÃO DO ARQUIVO
+                    if (sinal == true) {
+                        crud.descompactar();
+                        sinal = false;
+                    } else
+                        System.out.println("O arquivo não está compactado!");
+
+                }
+
+                    break;
+
+                case 9:
+
+                    // criptografia
+
+                    break;
+
+                    case 10:
+
+                    crud.lerArquivoIndex();
 
                     break;
 

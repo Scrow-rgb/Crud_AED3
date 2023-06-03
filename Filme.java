@@ -1,10 +1,6 @@
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+
+
 import java.util.Calendar;
-import java.util.List;
 
 public class Filme {
     protected int id;
@@ -15,10 +11,6 @@ public class Filme {
     protected ListaCast cast; // 8 9 10
     protected double duracao; // 15
     protected boolean lapide;
-    protected byte ba[];
-    private String concatenar;
-    private List<Integer> comprimido;
-    private String descomprimido;
 
     public Filme(int id, String t, String g, Calendar c, double s, ListaCast lc, double dur, boolean l) {
 
@@ -56,109 +48,4 @@ public class Filme {
                 "\nScore: " + this.score +
                 "\nParticipantes: ";
     }
-
-    public void fromByteArray(byte[] b) throws IOException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(b);
-        DataInputStream dis = new DataInputStream(bais);
-        this.id = dis.readInt();
-        this.titulo = dis.readUTF();
-        this.genero = dis.readUTF();
-        this.data.setTimeInMillis(dis.readLong());
-        this.score = dis.readDouble();
-        this.duracao = dis.readDouble();
-    }// fim do metodo fromByteArray
-
-    public byte[] toByteArray() throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(baos);
-        dos.writeInt(id);
-        dos.writeUTF(titulo);
-        dos.writeLong(data.getTimeInMillis());
-        dos.writeDouble(score);
-        dos.writeUTF(cast.imprimirNomes());
-        dos.writeDouble(duracao);
-
-        return baos.toByteArray();
-    }// fim do metodo toByteArray
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public Calendar getData() {
-        return data;
-    }
-
-    public void setData(Calendar data) {
-        this.data = data;
-    }
-
-    public double getScore() {
-        return score;
-    }
-
-    public void setScore(double score) {
-        this.score = score;
-    }
-
-    public ListaCast getCast() {
-        return cast;
-    }
-
-    public void setCast(ListaCast cast) {
-        this.cast = cast;
-    }
-
-    public double getDuracao() {
-        return duracao;
-    }
-
-    public void setDuracao(double duracao) {
-        this.duracao = duracao;
-    }
-
-    public String getConcatenar() {
-        return concatenar;
-    }
-
-    public void setConcatenar(String concatenar) {
-        this.concatenar = concatenar;
-    }
-
-    public List<Integer> getComprimido() {
-        return comprimido;
-    }
-
-    public void setComprimido(List<Integer> comprimido) {
-        this.comprimido = comprimido;
-    }
-
-    public String getDescomprimido() {
-        return descomprimido;
-    }
-
-    public void setDescomprimido(String descomprimido) {
-        this.descomprimido = descomprimido;
-    }
-
 }
