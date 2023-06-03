@@ -1,5 +1,3 @@
-
-
 public class LZWValor {
     private int valor;
     private LZWValor proximo;
