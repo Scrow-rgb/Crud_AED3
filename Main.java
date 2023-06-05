@@ -1,5 +1,3 @@
-import java.io.File;
-import java.security.CryptoPrimitive;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -10,7 +8,6 @@ public class Main {
         System.out.println("");
         Scanner leitor = new Scanner(System.in);
         CRUD crud = new CRUD();
-        Filme filmes = new Filme();
         boolean sinal = false;
         AES crip = new AES();
         final String chave = "sorvete";
