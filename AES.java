@@ -3,16 +3,16 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+
 
 public class AES {
     private static SecretKeySpec secretKey;
     private static byte[] key;
 
     // Montando a chave
-    public static void setKey(final String minhaChave) {
+    public  void setKey(final String minhaChave) {
         MessageDigest sha = null;
         try {
             key = minhaChave.getBytes("UTF-8"); // pega o vetor de bytes da chave
@@ -30,7 +30,7 @@ public class AES {
      * Método que recebe dois argumentos: a mensagem a ser cifrada e um senha para cifrar. 
      * É retornado a mensagem cifrada.
      */
-    public static String encrypt(final String msgEncript, final String chave) {
+    public  String encrypt(final String msgEncript, final String chave) {
         try {
             setKey(chave); // altera o valor da chave para a chave digitada no terminal
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -46,7 +46,7 @@ public class AES {
     // Descriptografando
     // Método que recebe dois argumentos; a mensagem cifrada e a senha para descifrar
     // É retornado a mensagem descifrada.
-    public static String decrypt(final String msgDescript, final String chave) {
+    public  String decrypt(final String msgDescript, final String chave) {
         try {
             setKey(chave);
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
@@ -59,14 +59,6 @@ public class AES {
         return null;
     }
 
-    public static void main(String[] args) {
-        final String secretKey = "oceanoazul"; // Chave(senha)
-        String originalString = "howtodoinjava.com"; // texto/msg que quero criptografar
-        String encryptedString = AES.encrypt(originalString, secretKey); // cifrando a msg
-        String decryptedString = AES.decrypt(encryptedString, secretKey); // descifrando a msg
-        System.out.println(originalString); // mostra msg original antes de ser cifrada
-        System.out.println(encryptedString); // mostra a mensagem cifrada
-        System.out.println(decryptedString); // mostra a msg descifrada
-    }
+
 }
 

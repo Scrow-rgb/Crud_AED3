@@ -1,7 +1,7 @@
+import java.io.File;
+import java.security.CryptoPrimitive;
 import java.util.Calendar;
 import java.util.Scanner;
-
-
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -10,7 +10,12 @@ public class Main {
         System.out.println("");
         Scanner leitor = new Scanner(System.in);
         CRUD crud = new CRUD();
+        Filme filmes = new Filme();
         boolean sinal = false;
+        AES crip = new AES();
+        final String chave = "sorvete";
+        String tituloCriptografado;
+        String tituloDescriptografado;
 
         do {
 
@@ -41,7 +46,7 @@ public class Main {
 
                     System.out.println("Digite o nome do filme");
                     leitor.nextLine();
-                    f1.titulo = leitor.nextLine();
+                    String titulo = leitor.nextLine();
 
                     System.out.println("Digite o genero");
                     f1.genero = leitor.next();
@@ -80,7 +85,24 @@ public class Main {
 
                     }
 
+                    f1 = new Filme(f1.id, titulo, f1.genero, f1.data, f1.score, f1.cast, f1.duracao, f1.lapide);
+
+                    titulo = f1.getTitulo();
+                    tituloCriptografado = crip.encrypt(titulo, chave);
+                    f1.setTitulo(tituloCriptografado);
+
+                    f1 = new Filme(f1.id, tituloCriptografado, f1.genero, f1.data, f1.score, f1.cast, f1.duracao,
+                            f1.lapide);
+
                     crud.inserirFilme(f1);
+
+                    tituloDescriptografado = crip.decrypt(tituloCriptografado, chave);
+
+                    f1 = new Filme(f1.id, tituloDescriptografado, f1.genero, f1.data, f1.score, f1.cast, f1.duracao,
+                            f1.lapide);
+
+                    crud.inserirFilme(f1);
+
                     crud.lerID(f1.id);
 
                 }
@@ -103,6 +125,7 @@ public class Main {
                 case 4:
 
                     System.out.println("Lendo arquivo completo...");
+
                     crud.lerArquivo();
                     break;
 
@@ -144,12 +167,6 @@ public class Main {
                     break;
 
                 case 9:
-
-                    // criptografia
-
-                    break;
-
-                    case 10:
 
                     crud.lerArquivoIndex();
 
