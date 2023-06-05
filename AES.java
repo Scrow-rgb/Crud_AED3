@@ -60,7 +60,7 @@ public class AES {
     }
 
     public static void main(String[] args) {
-        final String secretKey = "ssshhhhhhhhhhh!!!!"; // Chave(senha)
+        final String secretKey = "oceanoazul"; // Chave(senha)
         String originalString = "howtodoinjava.com"; // texto/msg que quero criptografar
         String encryptedString = AES.encrypt(originalString, secretKey); // cifrando a msg
         String decryptedString = AES.decrypt(encryptedString, secretKey); // descifrando a msg
