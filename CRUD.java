@@ -1,4 +1,3 @@
-
 import java.util.Calendar;
 import java.io.IOException;
 import java.util.Random;
@@ -10,8 +9,8 @@ import java.io.RandomAccessFile;
 
 public class CRUD {
     private static Scanner leitor = new Scanner(System.in);
-    //sempre mudar o caminho do arquivo para o caminho correto do seu computador
-    private static String caminho = "D:/Caio/AED3/Crud_AED3/Crud_AED3/";
+    // sempre mudar o caminho do arquivo para o caminho correto do seu computador
+    private static String caminho = "C:/Users/Wander/Documents/Caio/Crud_AED3/";
     private static LZW compactador;
 
     // carrega os primeiros 100 filmes da database para o arquivo
@@ -39,7 +38,7 @@ public class CRUD {
                 aux = new ListaCast();
 
                 // gerador de datas aleatórias
-                long dia = rand.nextLong(300000000000l, 900000000000l);
+                long dia = rand.nextLong();
                 dataficticia.setTimeInMillis(dia);
 
                 dataficticia.set(Calendar.YEAR, Integer.parseInt(vetor[3]));
@@ -94,7 +93,7 @@ public class CRUD {
         file2.close();
     }
 
-    public  void inserirFilme(Filme inserir) throws IOException {
+    public void inserirFilme(Filme inserir) throws IOException {
         RandomAccessFile dos = new RandomAccessFile(caminho + "filmes.db", "rw");
         RandomAccessFile index = new RandomAccessFile(caminho + "index.db", "rw");
         Filme inserido = inserir;
@@ -122,7 +121,7 @@ public class CRUD {
         index.close();
     }
 
-    public  void lerID(int x) throws IOException {
+    public void lerID(int x) throws IOException {
         RandomAccessFile dis = new RandomAccessFile(caminho + "filmes.db", "rw");
         RandomAccessFile file2 = new RandomAccessFile(caminho + "index.db", "rw");
         String aux;
@@ -174,7 +173,7 @@ public class CRUD {
     }
 
     // criado apenas para testar a funcionalidade do arquivo de indices
-    public  void lerArquivoIndex() throws IOException {
+    public void lerArquivoIndex() throws IOException {
         RandomAccessFile dis = new RandomAccessFile(caminho + "index.db", "rw");
         int id;
         long pos;
@@ -192,7 +191,7 @@ public class CRUD {
     }
 
     // leitura total do arquivo
-    public  void lerArquivo() throws IOException {
+    public void lerArquivo() throws IOException {
         RandomAccessFile arq = new RandomAccessFile(caminho + "filmes.db", "rw");
         String aux;
         Filme f2 = new Filme();
@@ -225,7 +224,7 @@ public class CRUD {
 
     // atualiza registros e remove lapides
 
-    public  void atualizarRegistro(int x) throws IOException {
+    public void atualizarRegistro(int x) throws IOException {
         RandomAccessFile dis = new RandomAccessFile(caminho + "filmes.db", "rw");
         RandomAccessFile arqAux = new RandomAccessFile(caminho + "arquivoAux.db", "rw");
         RandomAccessFile indexFile = new RandomAccessFile(caminho + "index.db", "rw");
@@ -440,7 +439,7 @@ public class CRUD {
         indexFile.close();
     }
 
-    public  void apagarRegistro(int x) throws IOException {
+    public void apagarRegistro(int x) throws IOException {
         RandomAccessFile dis = new RandomAccessFile(caminho + "filmes.db", "rw");
         RandomAccessFile file2 = new RandomAccessFile(caminho + "index.db", "rw");
 
@@ -501,7 +500,7 @@ public class CRUD {
         file2.close();
     }
 
-    public  void removerLapides() throws IOException {
+    public void removerLapides() throws IOException {
         RandomAccessFile arq1 = new RandomAccessFile(caminho + "filmes.db", "rw");
         RandomAccessFile arq2 = new RandomAccessFile(caminho + "arquivoAux.db", "rw");
         RandomAccessFile arq3 = new RandomAccessFile(caminho + "index.db", "rw");
@@ -565,7 +564,7 @@ public class CRUD {
 
     }
 
-    public  void compactar() throws IOException {
+    public void compactar() throws IOException {
         // removerLapides();
 
         RandomAccessFile arquivo1 = new RandomAccessFile(caminho + "filmes.db", "rw");
@@ -607,7 +606,7 @@ public class CRUD {
 
     }
 
-    public  void descompactar() throws IOException {
+    public void descompactar() throws IOException {
         RandomAccessFile arquivo1 = new RandomAccessFile(caminho + "filmes.db", "rw");
         RandomAccessFile arquivo2 = new RandomAccessFile(caminho + "filmesCompactado.db", "rw");
 
@@ -649,6 +648,86 @@ public class CRUD {
 
     }
 
+    public void Criptografar() throws IOException {
+
+        RandomAccessFile arq = new RandomAccessFile(caminho + "filmes.db", "rw");
+        String chave = "sorvete";
+        AES crip = new AES();
+
+        String tituloCrip;
+        String aux;
+        Filme f1 = new Filme();
+
+        while (arq.getFilePointer() < arq.length()) {
+            f1.id = arq.readInt();
+            f1.titulo = arq.readUTF();
+            tituloCrip = crip.encrypt(f1.titulo, chave);
+            f1.genero = arq.readUTF();
+            f1.data.setTimeInMillis(arq.readLong());
+            f1.score = arq.readDouble();
+            aux = arq.readUTF();
+            f1.duracao = arq.readDouble();
+            f1.lapide = arq.readBoolean();
+
+            f1.setTitulo(tituloCrip);
+
+            if (f1.lapide != true) {
+                String[] vaux = aux.split(",");
+
+                for (int i = 0; i < vaux.length; i++) {
+                    f1.cast.inserirUltimo(vaux[i] + ",");
+                }
+                System.out.println(f1.toString());
+                f1.cast.imprimirLista();
+            }
+
+            f1.cast = new ListaCast();
+        }
+        arq.close();
+
+    }
+
+    public void Descriptografar() throws IOException {
+        RandomAccessFile arq = new RandomAccessFile(caminho + "filmes.db", "rw");
+        String chave = "sorvete";
+        AES crip = new AES();
+
+        String tituloCrip;
+        String tituloDecript;
+        String aux;
+        Filme f1 = new Filme();
+
+        while (arq.getFilePointer() < arq.length()) {
+            f1.id = arq.readInt();
+            f1.titulo = arq.readUTF();
+            tituloCrip = crip.encrypt(f1.titulo, chave);
+            f1.genero = arq.readUTF();
+            f1.data.setTimeInMillis(arq.readLong());
+            f1.score = arq.readDouble();
+            aux = arq.readUTF();
+            f1.duracao = arq.readDouble();
+            f1.lapide = arq.readBoolean();
+
+            tituloDecript = crip.decrypt(tituloCrip, chave);
+
+            f1.setTitulo(tituloDecript);
+
+            if (f1.lapide != true) {
+                String[] vaux = aux.split(",");
+
+                for (int i = 0; i < vaux.length; i++) {
+                    f1.cast.inserirUltimo(vaux[i] + ",");
+                }
+                System.out.println(f1.toString());
+                f1.cast.imprimirLista();
+            }
+
+            f1.cast = new ListaCast();
+        }
+        arq.close();
+
+    }
+
     public void Menu() {
         System.out.println("\nDigite 1 para fazer a carga de dados");
         System.out.println("Digite 2 para adicionar um filme ao arquivo");
@@ -659,7 +738,8 @@ public class CRUD {
         System.out.println("Digite 7 para compactar");
         System.out.println("Digite 8 para descompactar");
         System.out.println("Digite 9 para fazer a criptografia");
-        System.out.println("Digite 10 para ler o arquivo index");
+        System.out.println("Digite 10 para descriptografar");
+        System.out.println("Digite 11 para ler o arquivo index");
         System.out.println("Digite 0 para sair");
     }
 

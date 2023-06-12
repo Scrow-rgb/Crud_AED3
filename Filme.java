@@ -5,12 +5,8 @@ import java.util.Calendar;
 public class Filme {
     protected int id;
     protected String titulo; // 0
-    
-
-
-
     protected String genero; // 2
-    protected Calendar data; // 3 e 4
+    protected Calendar data; // 3 e 4s
     protected double score; // 6
     protected ListaCast cast; // 8 9 10
     protected double duracao; // 15

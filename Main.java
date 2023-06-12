@@ -165,6 +165,17 @@ public class Main {
 
                 case 9:
 
+                    crud.Criptografar();
+
+                    break;
+
+                case 10:
+                    crud.Descriptografar();
+                    
+                    break;
+
+                case 11:
+
                     crud.lerArquivoIndex();
 
                     break;
