@@ -84,19 +84,7 @@ public class Main {
 
                     f1 = new Filme(f1.id, titulo, f1.genero, f1.data, f1.score, f1.cast, f1.duracao, f1.lapide);
 
-                    titulo = f1.getTitulo();
-                    tituloCriptografado = crip.encrypt(titulo, chave);
-                    f1.setTitulo(tituloCriptografado);
-
-                    f1 = new Filme(f1.id, tituloCriptografado, f1.genero, f1.data, f1.score, f1.cast, f1.duracao,
-                            f1.lapide);
-
-                    crud.inserirFilme(f1);
-
-                    tituloDescriptografado = crip.decrypt(tituloCriptografado, chave);
-
-                    f1 = new Filme(f1.id, tituloDescriptografado, f1.genero, f1.data, f1.score, f1.cast, f1.duracao,
-                            f1.lapide);
+                    
 
                     crud.inserirFilme(f1);
 
