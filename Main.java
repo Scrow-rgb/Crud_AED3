@@ -9,11 +9,8 @@ public class Main {
         Scanner leitor = new Scanner(System.in);
         CRUD crud = new CRUD();
         boolean sinal = false;
-        AES crip = new AES();
-        final String chave = "sorvete";
-        String tituloCriptografado;
-        String tituloDescriptografado;
-
+      
+        
         do {
 
             crud.Menu();
