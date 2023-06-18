@@ -1,5 +1,3 @@
-package TP3;
-
 import java.util.Calendar;
 import java.io.IOException;
 import java.util.Random;
