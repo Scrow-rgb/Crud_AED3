@@ -1,3 +1,5 @@
+package TP3;
+
 import java.util.Calendar;
 import java.io.IOException;
 import java.util.Random;
@@ -10,7 +12,7 @@ import java.io.RandomAccessFile;
 public class CRUD {
     private static Scanner leitor = new Scanner(System.in);
     // sempre mudar o caminho do arquivo para o caminho correto do seu computador
-    private static String caminho = "C:/Users/Wander/Documents/Caio/Crud_AED3/";
+    private static String caminho = "C://Users//Gabri//OneDrive//Área de Trabalho//Nova pasta (2)//";
     private static LZW compactador;
 
     // carrega os primeiros 100 filmes da database para o arquivo
@@ -68,7 +70,7 @@ public class CRUD {
                 file2.writeLong(pos);
                 file2.writeBoolean(false);
 
-                System.out.println(id);
+                // System.out.println(id);
 
                 id++;
 
@@ -651,6 +653,7 @@ public class CRUD {
     public void Criptografar() throws IOException {
 
         RandomAccessFile arq = new RandomAccessFile(caminho + "filmes.db", "rw");
+        RandomAccessFile arq2 = new RandomAccessFile(caminho + "arquivoAux.db", "rw");
         String chave = "sorvete";
         AES crip = new AES();
 
@@ -677,18 +680,47 @@ public class CRUD {
                 for (int i = 0; i < vaux.length; i++) {
                     f1.cast.inserirUltimo(vaux[i] + ",");
                 }
-                System.out.println(f1.toString());
-                f1.cast.imprimirLista();
+                // System.out.println(f1.toString());
+                // f1.cast.imprimirLista();
+
+                arq2.writeInt(f1.id);
+                arq2.writeUTF(f1.titulo);
+                arq2.writeUTF(f1.genero);
+                arq2.writeLong(f1.data.getTimeInMillis());
+                arq2.writeDouble(f1.score);
+                arq2.writeUTF(f1.cast.imprimirNomes());
+                arq2.writeDouble(f1.duracao);
+                arq2.writeBoolean(f1.lapide);
             }
 
             f1.cast = new ListaCast();
         }
-        arq.close();
 
+        arq2.seek(0);
+
+        arq.setLength(0);
+
+        while (arq2.getFilePointer() < arq2.length()) {
+            arq.writeInt(arq2.readInt());
+            arq.writeUTF(arq2.readUTF());
+            arq.writeUTF(arq2.readUTF());
+            arq.writeLong(arq2.readLong());
+            arq.writeDouble(arq2.readDouble());
+            arq.writeUTF(arq2.readUTF());
+            arq.writeDouble(arq2.readDouble());
+            arq.writeBoolean(arq2.readBoolean());
+
+        }
+
+        arq2.setLength(0);
+
+        arq.close();
+        arq2.close();
     }
 
     public void Descriptografar() throws IOException {
         RandomAccessFile arq = new RandomAccessFile(caminho + "filmes.db", "rw");
+        RandomAccessFile arq2 = new RandomAccessFile(caminho + "arquivoAux.db", "rw");
         String chave = "sorvete";
         AES crip = new AES();
 
@@ -700,7 +732,7 @@ public class CRUD {
         while (arq.getFilePointer() < arq.length()) {
             f1.id = arq.readInt();
             f1.titulo = arq.readUTF();
-            tituloCrip = crip.encrypt(f1.titulo, chave);
+            tituloCrip = f1.titulo;
             f1.genero = arq.readUTF();
             f1.data.setTimeInMillis(arq.readLong());
             f1.score = arq.readDouble();
@@ -718,14 +750,142 @@ public class CRUD {
                 for (int i = 0; i < vaux.length; i++) {
                     f1.cast.inserirUltimo(vaux[i] + ",");
                 }
-                System.out.println(f1.toString());
-                f1.cast.imprimirLista();
+                // System.out.println(f1.toString());
+                // f1.cast.imprimirLista();
+                arq2.writeInt(f1.id);
+                arq2.writeUTF(f1.titulo);
+                arq2.writeUTF(f1.genero);
+                arq2.writeLong(f1.data.getTimeInMillis());
+                arq2.writeDouble(f1.score);
+                arq2.writeUTF(f1.cast.imprimirNomes());
+                arq2.writeDouble(f1.duracao);
+                arq2.writeBoolean(f1.lapide);
             }
 
             f1.cast = new ListaCast();
         }
-        arq.close();
+        arq2.seek(0);
 
+        arq.setLength(0);
+
+        while (arq2.getFilePointer() < arq2.length()) {
+            arq.writeInt(arq2.readInt());
+            arq.writeUTF(arq2.readUTF());
+            arq.writeUTF(arq2.readUTF());
+            arq.writeLong(arq2.readLong());
+            arq.writeDouble(arq2.readDouble());
+            arq.writeUTF(arq2.readUTF());
+            arq.writeDouble(arq2.readDouble());
+            arq.writeBoolean(arq2.readBoolean());
+        }
+
+        arq2.setLength(0);
+
+        arq.close();
+        arq2.close();
+
+    }
+
+    // Algoritmo KMP
+    public void KMP(String padrao) throws IOException {
+
+        RandomAccessFile arq = new RandomAccessFile(caminho + "filmes.db", "rw");
+        RandomAccessFile arq2 = new RandomAccessFile(caminho + "index.db", "rw");
+
+        Filme f1 = new Filme();
+
+        int idIndex;
+        long posIndex;
+        boolean lapideIndex;
+        String aux, texto;
+
+        boolean controle = false;
+
+        // inicio contagem de tempo de busca
+        long tempoInicial = System.currentTimeMillis();
+
+        int[] prefixos = CalculaPrefixoMelhorado(padrao);
+        int tamPadrao = padrao.length();
+        int tamTexto;
+        int cont = 0;
+
+        // navega pelo arquivo de indices para melhor eficiencia!
+        while (arq2.getFilePointer() < arq2.length()) {
+
+            idIndex = arq2.readInt();
+            posIndex = arq2.readLong();
+            lapideIndex = arq2.readBoolean();
+
+            int t, p;
+
+            if (lapideIndex != true) {
+
+                arq.seek(posIndex);
+
+                f1.id = arq.readInt();
+                f1.titulo = arq.readUTF();
+                f1.genero = arq.readUTF();
+                f1.data.setTimeInMillis(arq.readLong());
+                f1.score = arq.readDouble();
+                aux = arq.readUTF();
+                f1.duracao = arq.readDouble();
+                f1.lapide = arq.readBoolean();
+
+                texto = f1.titulo + " " + f1.genero + " " + aux;
+
+                tamTexto = texto.length();
+
+                for (t = 0, p = 0; p < tamPadrao && t < tamTexto; t++, p++)
+                    while (p >= 0 && texto.charAt(t) != padrao.charAt(p)) {
+                        p = prefixos[p];
+                        cont++;
+                    }
+
+                if (p == tamPadrao) {
+                    controle = true;
+                    // Imprime todos os resultados encontrados em todo arquivo
+                    System.out.println("\nPadrão encontrado no ID: " + idIndex);
+                    lerID(f1.id);
+                }
+            }
+
+        }
+
+        if (controle == false)
+            System.out.println("Padrão não encontrado!");
+
+        // fim da contagem do tempo de busca!
+        long tempoFinal = System.currentTimeMillis();
+        System.out.println("\nForam realizadas: " + cont + " comparações!");
+        System.out.print("Tempo de busca: ");
+        System.out.printf("%.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.println();
+
+        arq.close();
+        arq2.close();
+    }
+
+    // Cria vetor de prefixos melhorado para casamento de padrão KMP
+    public int[] CalculaPrefixoMelhorado(String padrao) {
+        int tam = padrao.length();
+        int[] prefixos = new int[tam];
+
+        prefixos[0] = -1;
+
+        for (int i = 0, j = -1; i < tam - 1;) {
+            while ((j >= 0) && (padrao.charAt(i) != padrao.charAt(j))) {
+                j = prefixos[j];
+            }
+            i++;
+            j++;
+
+            if (padrao.charAt(i) == padrao.charAt(j))
+                prefixos[i] = prefixos[j];
+            else
+                prefixos[i] = j;
+        }
+
+        return prefixos;
     }
 
     public void Menu() {
@@ -737,9 +897,10 @@ public class CRUD {
         System.out.println("Digite 6 para deletar um registro");
         System.out.println("Digite 7 para compactar");
         System.out.println("Digite 8 para descompactar");
-        System.out.println("Digite 9 para fazer a criptografia");
-        System.out.println("Digite 10 para descriptografar");
-        System.out.println("Digite 11 para ler o arquivo index");
+        System.out.println("Digite 9 para busca por Casamento de Padrões");
+        // System.out.println("Digite 10 para fazer a criptografia");
+        // System.out.println("Digite 11 para descriptografar");
+        // System.out.println("Digite 12 para ler o arquivo index");
         System.out.println("Digite 0 para sair");
     }
 
