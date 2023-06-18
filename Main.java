@@ -1,3 +1,5 @@
+package TP3;
+
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -9,8 +11,7 @@ public class Main {
         Scanner leitor = new Scanner(System.in);
         CRUD crud = new CRUD();
         boolean sinal = false;
-      
-        
+
         do {
 
             crud.Menu();
@@ -28,6 +29,7 @@ public class Main {
                     System.out.println("Fazendo a carga de dados...");
 
                     crud.cargaDeDados();
+                    crud.Criptografar();
 
                     break;
 
@@ -40,7 +42,7 @@ public class Main {
 
                     System.out.println("Digite o nome do filme");
                     leitor.nextLine();
-                    String titulo = leitor.nextLine();
+                    f1.titulo = leitor.nextLine();
 
                     System.out.println("Digite o genero");
                     f1.genero = leitor.next();
@@ -79,13 +81,12 @@ public class Main {
 
                     }
 
-                    f1 = new Filme(f1.id, titulo, f1.genero, f1.data, f1.score, f1.cast, f1.duracao, f1.lapide);
-
-                    
-
+                    crud.Descriptografar();
                     crud.inserirFilme(f1);
 
                     crud.lerID(f1.id);
+
+                    crud.Criptografar();
 
                 }
 
@@ -99,7 +100,9 @@ public class Main {
 
                     System.out.println("Buscando registro...");
 
+                    crud.Descriptografar();
                     crud.lerID(f1.id);
+                    crud.Criptografar();
 
                 }
                     break;
@@ -114,20 +117,27 @@ public class Main {
                 case 5:
 
                     System.out.println("Digite o id que deseja atualizar");
+
+                    crud.Descriptografar();
                     crud.atualizarRegistro(leitor.nextInt());
+                    crud.Criptografar();
 
                     break;
 
                 case 6:
 
                     System.out.println("Digite o id do registro que deseja apagar");
+
+                    crud.Descriptografar();
                     crud.apagarRegistro(leitor.nextInt());
+                    crud.Criptografar();
 
                     break;
 
                 case 7: {
 
                     if (sinal == false) {
+                        crud.Descriptografar();
                         crud.compactar();
                         sinal = true;
                     } else
@@ -140,6 +150,7 @@ public class Main {
 
                     if (sinal == true) {
                         crud.descompactar();
+                        crud.Criptografar();
                         sinal = false;
                     } else
                         System.out.println("O arquivo não está compactado!");
@@ -149,18 +160,24 @@ public class Main {
                     break;
 
                 case 9:
-
+                    System.out.println("Digite o padrão que deseja procurar:");
+                    leitor.nextLine();
+                    crud.Descriptografar();
+                    crud.KMP(leitor.nextLine());
                     crud.Criptografar();
-
                     break;
 
                 case 10:
-                    crud.Descriptografar();
-                    
+                    crud.Criptografar();
                     break;
 
                 case 11:
 
+                    crud.Descriptografar();
+
+                    break;
+
+                case 12:
                     crud.lerArquivoIndex();
 
                     break;
