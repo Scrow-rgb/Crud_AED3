@@ -1,3 +1,4 @@
+//Célula dos valores gerados pelo algoritmo LZW
 public class LZWValor {
     private int valor;
     private LZWValor proximo;
